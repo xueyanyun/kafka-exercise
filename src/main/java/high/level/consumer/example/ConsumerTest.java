@@ -1,4 +1,4 @@
-package kafka.exercise;
+package high.level.consumer.example;
 
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;

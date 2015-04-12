@@ -1,4 +1,4 @@
-package kafka.exercise;
+package producer.example;
 
 import kafka.producer.Partitioner;
 import kafka.utils.VerifiableProperties;

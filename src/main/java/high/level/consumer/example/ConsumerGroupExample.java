@@ -1,4 +1,4 @@
-package kafka.exercise;
+package high.level.consumer.example;
 
 import java.util.HashMap;
 import java.util.List;

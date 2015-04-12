@@ -1,4 +1,4 @@
-package kafka.exercise;
+package com.crxy.kafka.exercise;
 
 
 

@@ -37,16 +37,16 @@ public class ConsumerGroupExample {
     }
 	
 	
-	public void run(int a_numThread) {
+	public void run(int a_numThreads) {
 		
 		Map<String, Integer> topicCount = new HashMap<String, Integer>();
-		topicCount.put(topic, a_numThread);
+		topicCount.put(topic, a_numThreads);
 		
 		
 		Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap = consumer.createMessageStreams(topicCount );
 		List<KafkaStream<byte[], byte[]>> streams = consumerMap.get(topic);
 		
-		executor = Executors.newFixedThreadPool(a_numThread);
+		executor = Executors.newFixedThreadPool(a_numThreads);
 		
 		int threadNumber = 0;
 		for( KafkaStream<byte[], byte[]>  stream: streams) {
@@ -57,18 +57,15 @@ public class ConsumerGroupExample {
 	
 	public void shutdown() {
 		if (consumer != null) {
-			consumer.shutdown();
-	
+			consumer.shutdown();	
 		}
 		if (executor != null) {
 			executor.shutdown();			
-		}
-		
+		}		
 		try {
 			if (!executor.awaitTermination(5000, TimeUnit.MILLISECONDS)) {
 				 System.out.println("Timed out waiting for consumer threads to shut down, exiting uncleanly");
-			}
-			
+			}			
 		} catch (Exception e) {
 			System.out.println("Interrupted during shutdown, exiting uncleanly");
 		}

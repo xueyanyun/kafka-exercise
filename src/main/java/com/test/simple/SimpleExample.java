@@ -3,6 +3,7 @@ package com.test.simple;
  
 import kafka.api.FetchRequest;
 import kafka.api.FetchRequestBuilder;
+import kafka.api.OffsetRequest;
 import kafka.api.PartitionOffsetRequestInfo;
 import kafka.common.ErrorMapping;
 import kafka.common.TopicAndPartition;
@@ -90,6 +91,14 @@ public class SimpleExample {
             long numRead = 0;
             for (MessageAndOffset messageAndOffset : fetchResponse.messageSet(a_topic, a_partition)) {
                 long currentOffset = messageAndOffset.offset();
+                //Also note that we are explicitly checking that the offset being read is not less than the offset that we requested. 
+                //This is needed since if Kafka is compressing the messages, the fetch request will return an entire compressed block 
+                //even if the requested offset isn't the beginning of the compressed block. 
+                //Thus a message we saw previously may be returned again. 
+                //Note also that we ask for a fetchSize of 100000 bytes. 
+                
+                //If the Kafka producers are writing large batches, this might not be enough, and might return an empty message set.
+                //In this case, the fetchSize should be increased until a non-empty set is returned.
                 if (currentOffset < readOffset) {
                     System.out.println("Found an old offset: " + currentOffset + " Expecting: " + readOffset);
                     continue;
@@ -103,7 +112,8 @@ public class SimpleExample {
                 numRead++;
                 a_maxReads--;
             }
- 
+           // Finally, we keep track of the # of messages read. If we didn't read anything on the last request we go to sleep for a second 
+            //so we aren't hammering Kafka when there is no data.
             if (numRead == 0) {
                 try {
                     Thread.sleep(1000);
@@ -168,7 +178,8 @@ public class SimpleExample {
                 List<String> topics = Collections.singletonList(a_topic);
                 TopicMetadataRequest req = new TopicMetadataRequest(topics);
                 kafka.javaapi.TopicMetadataResponse resp = consumer.send(req);
- 
+                //The call to topicsMetadata() asks the Broker you are connected to for all the details 
+                //about the topic we are interested in.
                 List<TopicMetadata> metaData = resp.topicsMetadata();
                 for (TopicMetadata item : metaData) {
                     for (PartitionMetadata part : item.partitionsMetadata()) {

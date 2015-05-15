@@ -16,9 +16,9 @@ public class TestProducer {
 		
 		
 		Properties props = new Properties();
-		props.put("metadata.broker.list", "192.168.1.120:9092");
+		props.put("metadata.broker.list", "10.1.69.179:9092");
 		props.put("serializer.class", "kafka.serializer.StringEncoder");
-		props.put("partitioner.class", "kafka.exercise.SimplePartitioner");
+		//props.put("partitioner.class", "producer.example.SimplePartitioner");
 		props.put("request.required.acks", "1");
 		
 		ProducerConfig config = new ProducerConfig(props);
@@ -28,7 +28,7 @@ public class TestProducer {
 			long runtime = new Date().getTime();
 			String ip = "192.168.2." + rnd.nextInt(255);
 			String msg = runtime + ",www.example.com," + ip;
-			KeyedMessage<String, String> data = new KeyedMessage<String, String>("page_visits",  ip, msg);
+			KeyedMessage<String, String> data = new KeyedMessage<String, String>("xyy_test1",  ip, msg);
 			producer.send(data);			
 		}
 		

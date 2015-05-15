@@ -20,7 +20,7 @@ public class KafkaConsumer {
 		Properties props = new Properties();
 		props.put("zookeeper.connect", "192.168.1.170:2181");
 		props.put("group.id", "aaaa");
-		ConsumerConfig consumerConfig = new ConsumerConfig(props );
+		ConsumerConfig consumerConfig = new ConsumerConfig(props);
 		//创建消费者连接对象
 		ConsumerConnector consumer = Consumer.createJavaConsumerConnector(consumerConfig );
 		
